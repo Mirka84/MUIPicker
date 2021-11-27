@@ -1,23 +1,69 @@
-import logo from './logo.svg';
+import React, { useState }  from 'react';
 import './App.css';
+import Button from '@mui/material/Button';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider,
+} from '@material-ui/pickers';
+import { setDate } from 'date-fns';
+import { TextField } from '@mui/material';
+
+
 
 function App() {
+
+  const [date, setDate] = useState(new Date()); 
+  const [desc, setDesc] = useState('');
+  const [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()]; 
+  const [todos, setTodos] = useState([]); 
+  const [todo, setTodo] = useState({desc: '', selectedDate: ''});
+  
+  
+  const selectedDate=day + '.' + (month+1) + '.'+ year; 
+  
+
+  const addTodo = (event) => {
+    event.preventDefault();
+    
+    console.log(todos); 
+    setTodo({desc, selectedDate}); 
+    setTodos([...todos, todo]);  
+    
+  }
+
+ 
+  const inputChanged = (event) => { 
+     
+    setDesc(event.target.value); 
+ 
+  } 
+
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Todos</h1>
       </header>
+    <div>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <DatePicker value={date} onChange={date => setDate(date)} />
+    </MuiPickersUtilsProvider>
+    <TextField variant="standard" name="desc" label="Description" name="desc" value={desc} onChange={inputChanged}/>
+    <Button size="small" variant="contained" onClick={addTodo}>Add</Button>
+      <table><tbody>
+      {
+      todos.map((todo, index) => (
+        <tr key={index}>
+          <td>{todo.selectedDate}</td>
+          <td>{todo.desc}</td>
+        </tr>))
+      }; 
+      </tbody></table>
+    </div>
     </div>
   );
 }
